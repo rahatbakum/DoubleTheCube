@@ -1,20 +1,17 @@
 using UnityEngine;
 using TMPro;
 
-public class ResizingCubeText : CubeText
+public class ResizingCubeTextController : CubeTextController
 {
     [Min (0f)]
     [SerializeField] private float _maxFontSizeWithFitWidth = 13f;
     [Min (0f)]
     [SerializeField] private float _maxFontSizeWithFitHeight = 7f;
-    public override string Text
+
+    protected override void SetText(string text)
     {
-        get => base.Text;
-        set 
-        {
-            SetFontSizeToTMPs(StringLengthToFontSize(value.Length));
-            base.Text = value;
-        }
+        SetFontSizeToTMPs(StringLengthToFontSize(text.Length));
+        base.SetText(text);
     }
 
     private void SetFontSizeToTMPs(float fontSize)
