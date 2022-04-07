@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class CubeColorController : MonoBehaviour
 {
-    private const int MaxCubeLevel = 20;
+    private const int MaxCubeLevel = 11;
     private const float DefaultColorS = 1f;
-    private const float DefaultColorB = 1f;
+    private const float DefaultColorB = 0.75f;
 
     [SerializeField] protected MeshRenderer _meshRenderer;
 

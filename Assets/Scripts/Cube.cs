@@ -4,7 +4,7 @@ using UnityEngine.Events;
 public class Cube : MonoBehaviour
 {
     public const int NumberBase = 2;
-    public const int StartLevel = 2;
+    public const int StartLevel = 1;
     
     [Min (1)]
     [SerializeField] private int _level = StartLevel;
