@@ -5,6 +5,7 @@ public class Gun : MonoBehaviour
     private const float DefaultImpulseFrom0To1 = 1f;
 
     private GunState _state = GunState.NotLoading;
+    public GunState State => _state;
     private Cube _cube;
 
     public void Load(int level = 1)
@@ -25,10 +26,10 @@ public class Gun : MonoBehaviour
         _cube.GetComponent<PhysicsMovement>().AddImpulse(transform.forward, DefaultImpulseFrom0To1);
         
     }
+}
 
-    private enum GunState
-    {
-        NotLoading,
-        Loading
-    }
+public enum GunState
+{
+    NotLoading,
+    Loading
 }

@@ -1108,7 +1108,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _gun: {fileID: 1078344130}
   _xRange: 4
-  _loadingTime: 0.8
+  _loadingTime: 0.2
   MaxCubeLevel: 10
 --- !u!114 &914003689
 MonoBehaviour:
