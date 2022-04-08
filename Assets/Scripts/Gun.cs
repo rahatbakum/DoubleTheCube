@@ -11,18 +11,19 @@ public class Gun : MonoBehaviour
     {
         if(_state != GunState.NotLoading)
             return;
+        _state = GunState.Loading;
         _cube = CubeSpawner.Instance.SpawnCubeOutsideField(level, transform.position, transform.rotation);
         _cube.transform.SetParent(transform);
-        _state = GunState.Loading;
     }
 
     public void Shoot()
     {
         if(_state != GunState.Loading)
             return;
+        _state = GunState.NotLoading;
         CubeSpawner.Instance.AddCubeToList(_cube);
         _cube.GetComponent<PhysicsMovement>().AddImpulse(transform.forward, DefaultImpulseFrom0To1);
-        _state = GunState.NotLoading;
+        
     }
 
     private enum GunState

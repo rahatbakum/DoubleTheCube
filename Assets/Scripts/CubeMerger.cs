@@ -3,12 +3,31 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CubeMerger : MonoBehaviour
 {
+    private const float MinMergeTimeInterval = 0.2f;
     [SerializeField] private Cube _cube;
     private bool isMerged = false;
+    private bool isActive = false;
+    private float _lastMergeTime;
+
+    public void Activate()
+    {
+        isActive = true;
+        SaveLastMergeTime();
+    }
 
     public bool TryMergeCube(CubeMerger cubeMerger)
     {   
+        if(Time.time < _lastMergeTime + MinMergeTimeInterval)
+            return false;
+        if(Time.time < cubeMerger._lastMergeTime + MinMergeTimeInterval)
+            return false;
         if(isMerged)
+            return false;
+        if(cubeMerger.isMerged)
+            return false;
+        if(!isActive)
+            return false;
+        if(!cubeMerger.isActive)
             return false;
         if(_cube == null || cubeMerger._cube == null)
             return false;
@@ -19,9 +38,11 @@ public class CubeMerger : MonoBehaviour
 
         isMerged = true;
         cubeMerger.isMerged = true;
+        SaveLastMergeTime();
+
+        Debug.Log($"Merge {Cube.LevelToNumber(_cube.Level)} {Cube.LevelToNumber(cubeMerger._cube.Level)}");
         Cube slowerCube = SlowerCube(_cube, cubeMerger._cube);
         int newCubeLevel = NewCubeLevel(_cube.Level, cubeMerger._cube.Level);
-        float impulse = Impulse(_cube, cubeMerger._cube);
         Vector3 newCubePosition = slowerCube.transform.position;
         Quaternion newCubeRotation = slowerCube.transform.rotation;
 
@@ -33,22 +54,6 @@ public class CubeMerger : MonoBehaviour
     }
 
     private static int NewCubeLevel(int cube1Level, int cube2Level) => cube1Level + 1;
-
-    private static float Impulse(Cube cube1, Cube cube2)
-    {
-        float cube1Velocity;
-        float cube2Velocity;
-        if(cube1.TryGetComponent<Rigidbody>(out Rigidbody cube1RigidBody))
-            cube1Velocity = cube1RigidBody.velocity.magnitude;
-        else
-            cube1Velocity = 0f;
-        if(!cube2.TryGetComponent<Rigidbody>(out Rigidbody cube2RigidBody))
-            cube2Velocity = cube2RigidBody.velocity.magnitude;
-        else
-            cube2Velocity = 0f;
-
-        return cube1Velocity + cube2Velocity;
-    }
 
     private static Cube SlowerCube(Cube cube1, Cube cube2)
     {
@@ -67,5 +72,13 @@ public class CubeMerger : MonoBehaviour
     {
         if(other.gameObject.TryGetComponent(out CubeMerger cubeMerger))
             TryMergeCube(cubeMerger);
+    }
+    
+    private void SaveLastMergeTime() => _lastMergeTime = Time.time;
+
+    private void OnDrawGizmos()
+    {
+        if(Time.time < _lastMergeTime + MinMergeTimeInterval)
+            Gizmos.DrawWireSphere(transform.position, 1f);
     }
 }

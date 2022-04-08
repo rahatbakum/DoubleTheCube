@@ -3,11 +3,9 @@ using UnityEngine;
 
 public class CubeColorController : MonoBehaviour
 {
-    private const int MaxCubeLevel = 11;
-    private const float DefaultColorS = 1f;
-    private const float DefaultColorB = 0.75f;
 
     [SerializeField] protected MeshRenderer _meshRenderer;
+    [SerializeField] protected Color[] _colors;
 
     public void OnCubeInitialized(int number)
     {
@@ -24,10 +22,6 @@ public class CubeColorController : MonoBehaviour
         _meshRenderer.material.color = color;
     }
 
-    private Color ColorByNumber(int number)
-    {
-        int level = Cube.NumberToLevel(number);
-        float colorH = (float) ((level - Cube.StartLevel) % MaxCubeLevel) / MaxCubeLevel;
-        return Color.HSVToRGB(colorH, DefaultColorS, DefaultColorB);
-    }
+    private Color ColorByNumber(int number) => _colors[(Cube.NumberToLevel(number) - Cube.StartLevel) % _colors.Length];
+    
 }

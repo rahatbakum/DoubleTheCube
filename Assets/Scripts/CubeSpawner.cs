@@ -37,6 +37,7 @@ public class CubeSpawner : MonoBehaviour
             return;
         _spawnedCubes.Add(cube);
         cube.transform.SetParent(_cubeContainer);
+        cube.Activate();
     }
 
     private Cube NearestCubeByLevel(int level, Vector3 position) // returns null when there is no cube with same level

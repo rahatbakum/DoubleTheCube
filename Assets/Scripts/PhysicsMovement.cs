@@ -4,7 +4,7 @@ using UnityEngine;
 public class PhysicsMovement : MonoBehaviour
 {
     public const float MinImpulse = 0f;
-    public const float MaxImpulse = 20f;
+    public const float MaxImpulse = 25f;
 
     private Rigidbody _rigidbody;
 
