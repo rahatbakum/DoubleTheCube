@@ -5,7 +5,7 @@ using System.Collections.Generic;
 [DisallowMultipleComponent]
 public class CubeSpawner : MonoBehaviour
 {
-    private const float DefaultImpulseFrom0To1 = 0.6f;
+    private const float DefaultImpulseValueFrom0To1 = 0.6f;
 
     [SerializeField] private GameObject _cubePrefab;
     [SerializeField] private Transform _cubeContainer;
@@ -18,7 +18,17 @@ public class CubeSpawner : MonoBehaviour
         if(!isTakeImpulse)
             cube = SpawnCubeWithoutImpulse(level, position, rotation);
         else
-            cube = SpawnCubeWithImpulse(level, position, rotation, Vector3.up, DefaultImpulseFrom0To1);
+        {
+            Cube nearestCube = FieldHelper.NearestCubeByLevel(_spawnedCubes, level, position);
+            if(nearestCube == null)
+                cube = SpawnCubeWithImpulse(level, position, rotation, FieldHelper.DefaultImpulseDirection(), DefaultImpulseValueFrom0To1);
+            else 
+            {
+                Debug.Log($"Nearest to {level} is on {Vector3.Distance(position, nearestCube.transform.position)}");
+                Vector3 impulseDirection = FieldHelper.ImpulseDirectionByValue(PhysicsMovement.RealImpulseValue(DefaultImpulseValueFrom0To1), position, nearestCube.transform.position);   
+                cube = SpawnCubeWithImpulse(level, position, rotation, impulseDirection, DefaultImpulseValueFrom0To1);
+            }
+        }
         AddCubeToList(cube);
         return cube;
     }
@@ -40,36 +50,10 @@ public class CubeSpawner : MonoBehaviour
         cube.Activate();
     }
 
-    private Cube NearestCubeByLevel(int level, Vector3 position) // returns null when there is no cube with same level
-    {
-        List<Cube> cubesWithThisLevel = new List<Cube>();
-        foreach(var item in _spawnedCubes)
-        {
-            if(item.Level == level)
-                cubesWithThisLevel.Add(item);
-        }
-
-        if(cubesWithThisLevel.Count == 0)
-            return null;
-
-        float nearestDistance = float.MaxValue;
-        Cube nearestCube = cubesWithThisLevel[0];
-        foreach(var item in cubesWithThisLevel)
-        {
-            float distance = Vector3.Distance(position, item.transform.position);
-            if(distance < nearestDistance)
-            {
-                nearestDistance = distance;
-                nearestCube = item;  
-            }
-        }
-        return nearestCube;
-    }
-
-    private Cube SpawnCubeWithImpulse(int level, Vector3 position, Quaternion rotation, Vector3 impulseDirection, float impulseFrom0To1)
+    private Cube SpawnCubeWithImpulse(int level, Vector3 position, Quaternion rotation, Vector3 impulseDirection, float impulseValueFrom0To1)
     {
         Cube cube = SpawnOneCube(level, position, rotation);
-        cube.GetComponent<PhysicsMovement>().AddImpulse(impulseDirection, impulseFrom0To1);
+        cube.GetComponent<PhysicsMovement>().AddImpulse(impulseDirection, impulseValueFrom0To1, isAddTorque: true);
         return cube;
     }
 
@@ -81,7 +65,6 @@ public class CubeSpawner : MonoBehaviour
         cube.Initialize(level);
         return cube;
     }
-
 
     private void Awake()
     {

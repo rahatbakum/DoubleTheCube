@@ -9,7 +9,7 @@ public class Shooter : MonoBehaviour
 
     [SerializeField] private Gun _gun;
     [SerializeField] private float _xRange = 4f; 
-    [SerializeField] private float _loadingTime = 0.2f;
+    [SerializeField] private float _loadingTime = 0.5f;
     public float XRange => _xRange;
     public Vector3 RightEdgePosition => transform.position + transform.right * MathHelper.Half(_xRange);
     public Vector3 LeftEdgePosition => transform.position - transform.right * MathHelper.Half(_xRange);

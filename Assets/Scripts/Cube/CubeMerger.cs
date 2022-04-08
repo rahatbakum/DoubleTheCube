@@ -3,7 +3,7 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class CubeMerger : MonoBehaviour
 {
-    private const float MinMergeTimeInterval = 0.2f;
+    private const float MinMergeTimeInterval = 0.25f;
     [SerializeField] private Cube _cube;
     private bool isMerged = false;
     private bool isActive = false;
@@ -12,7 +12,7 @@ public class CubeMerger : MonoBehaviour
     public void Activate()
     {
         isActive = true;
-        SaveLastMergeTime();
+        SaveLastMergeTime(Time.time - MinMergeTimeInterval * 3f); //some random small value 
     }
 
     public bool TryMergeCube(CubeMerger cubeMerger)
@@ -38,9 +38,8 @@ public class CubeMerger : MonoBehaviour
 
         isMerged = true;
         cubeMerger.isMerged = true;
-        SaveLastMergeTime();
 
-        Debug.Log($"Merge {Cube.LevelToNumber(_cube.Level)} {Cube.LevelToNumber(cubeMerger._cube.Level)}");
+        //Debug.Log($"Merge {Cube.LevelToNumber(_cube.Level)} {Cube.LevelToNumber(cubeMerger._cube.Level)}");
         Cube slowerCube = SlowerCube(_cube, cubeMerger._cube);
         int newCubeLevel = NewCubeLevel(_cube.Level, cubeMerger._cube.Level);
         Vector3 newCubePosition = slowerCube.transform.position;
@@ -49,7 +48,8 @@ public class CubeMerger : MonoBehaviour
         CubeSpawner.Instance.DestroyCube(_cube);
         CubeSpawner.Instance.DestroyCube(cubeMerger._cube);
 
-        CubeSpawner.Instance.SpawnCubeInField(newCubeLevel, newCubePosition, newCubeRotation, isTakeImpulse: true);
+        Cube newCube = CubeSpawner.Instance.SpawnCubeInField(newCubeLevel, newCubePosition, newCubeRotation, isTakeImpulse: true);
+        newCube.GetComponent<CubeMerger>().SaveLastMergeTime(Time.time);
         return true;
     }
 
@@ -74,7 +74,7 @@ public class CubeMerger : MonoBehaviour
             TryMergeCube(cubeMerger);
     }
     
-    private void SaveLastMergeTime() => _lastMergeTime = Time.time;
+    private void SaveLastMergeTime(float time) => _lastMergeTime = time;
 
     private void OnDrawGizmos()
     {

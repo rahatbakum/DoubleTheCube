@@ -14,6 +14,11 @@ public class TestShooter : MonoBehaviour
         StartCoroutine(Shoot());
     }
 
+    private void Update()
+    {
+        
+    }
+
     private IEnumerator Shoot()
     {
         while(true)
@@ -24,7 +29,9 @@ public class TestShooter : MonoBehaviour
             
             float d = _target.transform.position.x - transform.position.x;
             _sinAngle = (-Physics.gravity.y) * d / _impulse / _impulse;
-            _angle = Mathf.Asin(_sinAngle) / 2 * Mathf.Rad2Deg;
+            float doubleAngle = Mathf.Asin(_sinAngle) * Mathf.Rad2Deg;
+            doubleAngle = Mathf.Max(180f - doubleAngle, doubleAngle);
+            _angle = doubleAngle / 2f; 
             Vector3 velocity = Quaternion.Euler(0f, 0f, _angle) * Vector2.right * _impulse;
             GameObject sphere = Instantiate(_prefab, transform.position, transform.rotation, transform) as GameObject;
             sphere.GetComponent<Rigidbody>().velocity = velocity;
