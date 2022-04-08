@@ -39,4 +39,5 @@ public class Cube : MonoBehaviour
     public int GetNumber() => LevelToNumber(_level);
 
     public static int LevelToNumber(int level) => (int) Mathf.Pow(NumberBase, level);
+    public static int NumberToLevel(int number) => (int) Mathf.Log(number, NumberBase);
 }

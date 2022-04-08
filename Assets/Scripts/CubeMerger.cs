@@ -25,10 +25,10 @@ public class CubeMerger : MonoBehaviour
         Vector3 newCubePosition = slowerCube.transform.position;
         Quaternion newCubeRotation = slowerCube.transform.rotation;
 
-        CubeSpawner.Instance?.DestroyCube(_cube);
-        CubeSpawner.Instance?.DestroyCube(cubeMerger._cube);
+        CubeSpawner.Instance.DestroyCube(_cube);
+        CubeSpawner.Instance.DestroyCube(cubeMerger._cube);
 
-        CubeSpawner.Instance?.SpawnCube(newCubeLevel, newCubePosition, newCubeRotation, isTakeImpulse: true);
+        CubeSpawner.Instance.SpawnCubeInField(newCubeLevel, newCubePosition, newCubeRotation, isTakeImpulse: true);
         return true;
     }
 

@@ -14,7 +14,7 @@ public class CubeSpawnerTester : MonoBehaviour
         while(true)
         {
             yield return new WaitForSeconds(0.5f);
-            CubeSpawner.Instance.SpawnCube(Random.Range(1,10), transform.position, transform.rotation);
+            CubeSpawner.Instance.SpawnCubeInField(Random.Range(1,10), transform.position, transform.rotation);
         }
     }
 }

@@ -26,7 +26,7 @@ public class CubeColorController : MonoBehaviour
 
     private Color ColorByNumber(int number)
     {
-        int level = (int) Mathf.Log(number, Cube.NumberBase);
+        int level = Cube.NumberToLevel(number);
         float colorH = (float) ((level - Cube.StartLevel) % MaxCubeLevel) / MaxCubeLevel;
         return Color.HSVToRGB(colorH, DefaultColorS, DefaultColorB);
     }
