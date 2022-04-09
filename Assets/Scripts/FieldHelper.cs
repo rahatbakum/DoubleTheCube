@@ -5,13 +5,13 @@ using UnityEngine;
 public static class FieldHelper
 {
     ///<summary>
-    ///Returns impulse direction for throwing from first position to second. Ignore y positions.  
+    ///Returns velocity direction for throwing from first position to second. Ignore y positions.  
     ///</summary>
-    public static Vector3 ImpulseDirectionByValue(float impulseValue, Vector3 position1, Vector3 position2, ThrowMode throwMethod = ThrowMode.High)
+    public static Vector3 VelocityDirectionByValue(float velocityValue, Vector3 position1, Vector3 position2, ThrowMode throwMethod = ThrowMode.High)
     {
         Vector3 position2WithPosition1Y = new Vector3(position2.x, position1.y, position2.z);
         float distance = Vector3.Distance(position1, position2WithPosition1Y);
-        float sinOfAngle = (-Physics.gravity.y) * distance / impulseValue / impulseValue;
+        float sinOfAngle = (-Physics.gravity.y) * distance / velocityValue / velocityValue;
         sinOfAngle = Mathf.Clamp(sinOfAngle, -1f, 1f);
         
         float doubleAngle = Mathf.Asin(sinOfAngle) * Mathf.Rad2Deg;
@@ -24,8 +24,8 @@ public static class FieldHelper
         Vector3 direction = position2WithPosition1Y - position1;
         Quaternion zRotation = Quaternion.Euler(0f, 0f, angle);
         Quaternion yRotation = Quaternion.FromToRotation(Vector3.right, direction);
-        Vector3 impulse = yRotation * zRotation * Vector3.right;
-        return impulse;
+        Vector3 velocity = yRotation * zRotation * Vector3.right;
+        return velocity;
     }
 
     public static Cube NearestCubeByLevel(List<Cube> cubes, int level, Vector3 position) // returns null when there is no cube with same level
@@ -54,7 +54,7 @@ public static class FieldHelper
         return nearestCube;
     }
 
-    public static Vector3 DefaultImpulseDirection() => new Vector3(0f, 1f, 0.1f).normalized;
+    public static Vector3 DefaultVelocityDirection() => new Vector3(0f, 1f, 0.1f).normalized;
 }
 
 public enum ThrowMode

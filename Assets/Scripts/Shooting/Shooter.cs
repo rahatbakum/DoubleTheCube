@@ -9,7 +9,7 @@ public class Shooter : MonoBehaviour
 
     [SerializeField] private Gun _gun;
     [SerializeField] private float _xRange = 4f; 
-    [SerializeField] private float _loadingTime = 0.5f;
+    [SerializeField] private float _loadingTime = 0.2f;
     public float XRange => _xRange;
     public Vector3 RightEdgePosition => transform.position + transform.right * MathHelper.Half(_xRange);
     public Vector3 LeftEdgePosition => transform.position - transform.right * MathHelper.Half(_xRange);
@@ -19,12 +19,15 @@ public class Shooter : MonoBehaviour
     private float _anchorXPosition = 0f;
     private float _currentXPosition = 0f;
     private bool _isSavedAnchorXPosition = false;
+    private bool _isWaitingForLoad = false;
 
 
     public void Shoot()
     {
         _isSavedAnchorXPosition = false;
         _gun.Shoot();
+        if(_isWaitingForLoad)
+            return;
         StartCoroutine(LoadAfterSeconds(_loadingTime));
     }
 
@@ -52,7 +55,9 @@ public class Shooter : MonoBehaviour
 
     private IEnumerator LoadAfterSeconds(float time)
     {
+        _isWaitingForLoad = true;
         yield return new WaitForSeconds(time);
+        _isWaitingForLoad = false;
         Load();
     }
 

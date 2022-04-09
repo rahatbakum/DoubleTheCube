@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour
 {
-    private const float DefaultImpulseValueFrom0To1 = 1f;
+    private const float DefaultVelocityValueFrom0To1 = 1f;
 
     private GunState _state = GunState.NotLoading;
     public GunState State => _state;
@@ -23,7 +23,7 @@ public class Gun : MonoBehaviour
             return;
         _state = GunState.NotLoading;
         CubeSpawner.Instance.AddCubeToList(_cube);
-        _cube.GetComponent<PhysicsMovement>().AddImpulse(transform.forward, DefaultImpulseValueFrom0To1);
+        _cube.GetComponent<PhysicsMovement>().AddVelocity(transform.forward, DefaultVelocityValueFrom0To1);
         
     }
 }
