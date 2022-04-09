@@ -4,21 +4,24 @@ using UnityEngine;
 
 public static class FieldHelper
 {
-    public static Vector3 ImpulseDirectionByValue(float impulseValue, Vector3 position1, Vector3 position2, ThrowMethod throwMethod = ThrowMethod.High)
+    ///<summary>
+    ///Returns impulse direction for throwing from first position to second. Ignore y positions.  
+    ///</summary>
+    public static Vector3 ImpulseDirectionByValue(float impulseValue, Vector3 position1, Vector3 position2, ThrowMode throwMethod = ThrowMode.High)
     {
-        float distance = Vector3.Distance(position1, position2);
+        Vector3 position2WithPosition1Y = new Vector3(position2.x, position1.y, position2.z);
+        float distance = Vector3.Distance(position1, position2WithPosition1Y);
         float sinOfAngle = (-Physics.gravity.y) * distance / impulseValue / impulseValue;
-        Debug.Log($"SinOf Angle {sinOfAngle}");
         sinOfAngle = Mathf.Clamp(sinOfAngle, -1f, 1f);
         
         float doubleAngle = Mathf.Asin(sinOfAngle) * Mathf.Rad2Deg;
-        if(throwMethod == ThrowMethod.Low)
+        if(throwMethod == ThrowMode.Low)
             doubleAngle = Mathf.Min(doubleAngle, MathHelper.HalfOfCircleDegrees - doubleAngle);
         else
             doubleAngle = Mathf.Max(doubleAngle, MathHelper.HalfOfCircleDegrees - doubleAngle);
         float angle = MathHelper.Half(doubleAngle);
 
-        Vector3 direction = position2 - position1;
+        Vector3 direction = position2WithPosition1Y - position1;
         Quaternion zRotation = Quaternion.Euler(0f, 0f, angle);
         Quaternion yRotation = Quaternion.FromToRotation(Vector3.right, direction);
         Vector3 impulse = yRotation * zRotation * Vector3.right;
@@ -54,7 +57,7 @@ public static class FieldHelper
     public static Vector3 DefaultImpulseDirection() => new Vector3(0f, 1f, 0.1f).normalized;
 }
 
-public enum ThrowMethod
+public enum ThrowMode
 {
     Low,
     High

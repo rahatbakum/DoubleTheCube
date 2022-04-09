@@ -80,8 +80,7 @@ public class CubeMerger : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        if(Time.time > _lastCheckCollisionTime + CheckCollisionTimeInterval)
-            CheckCollision(other);
+        CheckCollision(other);
     }
 
     private void CheckCollision(Collision other)

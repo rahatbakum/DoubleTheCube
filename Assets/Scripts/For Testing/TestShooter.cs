@@ -26,16 +26,11 @@ public class TestShooter : MonoBehaviour
             yield return new WaitForSeconds(0.2f);
 
             
-            
-            float d = _target.transform.position.x - transform.position.x;
-            _sinAngle = (-Physics.gravity.y) * d / _impulse / _impulse;
-            float doubleAngle = Mathf.Asin(_sinAngle) * Mathf.Rad2Deg;
-            doubleAngle = Mathf.Max(180f - doubleAngle, doubleAngle);
-            _angle = doubleAngle / 2f; 
-            Vector3 velocity = Quaternion.Euler(0f, 0f, _angle) * Vector2.right * _impulse;
+            float impulseValue = PhysicsMovement.MaxImpulseValue;
+            Vector3 impulse = FieldHelper.ImpulseDirectionByValue(impulseValue, transform.position, _target.position);
             GameObject sphere = Instantiate(_prefab, transform.position, transform.rotation, transform) as GameObject;
-            sphere.GetComponent<Rigidbody>().velocity = velocity;
-            Destroy(sphere, 5f);
+            sphere.GetComponent<Rigidbody>().AddForce(impulse * impulseValue, ForceMode.Impulse);
+            Destroy(sphere, 2.5f);
         }
     }
 
