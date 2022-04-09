@@ -24,7 +24,7 @@ public class CubeSpawner : MonoBehaviour
                 cube = SpawnCubeWithImpulse(level, position, rotation, FieldHelper.DefaultImpulseDirection(), DefaultImpulseValueFrom0To1);
             else 
             {
-                Debug.Log($"Nearest to {level} is on {Vector3.Distance(position, nearestCube.transform.position)}");
+                Debug.Log($"Nearest to {Cube.LevelToNumber(level)} is on {nearestCube.transform.position}");
                 Vector3 impulseDirection = FieldHelper.ImpulseDirectionByValue(PhysicsMovement.RealImpulseValue(DefaultImpulseValueFrom0To1), position, nearestCube.transform.position);   
                 cube = SpawnCubeWithImpulse(level, position, rotation, impulseDirection, DefaultImpulseValueFrom0To1);
             }

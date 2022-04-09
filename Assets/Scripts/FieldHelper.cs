@@ -8,8 +8,9 @@ public static class FieldHelper
     {
         float distance = Vector3.Distance(position1, position2);
         float sinOfAngle = (-Physics.gravity.y) * distance / impulseValue / impulseValue;
-        sinOfAngle = Mathf.Clamp01(sinOfAngle);
-
+        Debug.Log($"SinOf Angle {sinOfAngle}");
+        sinOfAngle = Mathf.Clamp(sinOfAngle, -1f, 1f);
+        
         float doubleAngle = Mathf.Asin(sinOfAngle) * Mathf.Rad2Deg;
         if(throwMethod == ThrowMethod.Low)
             doubleAngle = Mathf.Min(doubleAngle, MathHelper.HalfOfCircleDegrees - doubleAngle);
@@ -50,7 +51,7 @@ public static class FieldHelper
         return nearestCube;
     }
 
-    public static Vector3 DefaultImpulseDirection() => new Vector3(0f, 1f, 1f).normalized;
+    public static Vector3 DefaultImpulseDirection() => new Vector3(0f, 1f, 0.1f).normalized;
 }
 
 public enum ThrowMethod

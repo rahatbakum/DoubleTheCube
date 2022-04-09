@@ -4,15 +4,19 @@ using UnityEngine;
 public class CubeMerger : MonoBehaviour
 {
     private const float MinMergeTimeInterval = 0.25f;
+    private const float CheckCollisionTimeInterval = 0.25f;
+
     [SerializeField] private Cube _cube;
     private bool isMerged = false;
     private bool isActive = false;
     private float _lastMergeTime;
+    private float _lastCheckCollisionTime;
 
     public void Activate()
     {
         isActive = true;
-        SaveLastMergeTime(Time.time - MinMergeTimeInterval * 3f); //some random small value 
+        SaveLastMergeTime(Time.time - MinMergeTimeInterval); //some random small value 
+        SaveLastCheckCollisionTime(Time.time - CheckCollisionTimeInterval); //some random small value 
     }
 
     public bool TryMergeCube(CubeMerger cubeMerger)
@@ -68,13 +72,27 @@ public class CubeMerger : MonoBehaviour
 
     private static bool IsSuitableCubes(Cube cube1, Cube cube2) => cube1.Level == cube2.Level;
 
+    private void OnCollisionStay(Collision other)
+    {
+        if(Time.time > _lastCheckCollisionTime + CheckCollisionTimeInterval)
+            CheckCollision(other);
+    }
+
     private void OnCollisionEnter(Collision other)
     {
+        if(Time.time > _lastCheckCollisionTime + CheckCollisionTimeInterval)
+            CheckCollision(other);
+    }
+
+    private void CheckCollision(Collision other)
+    {
+        SaveLastCheckCollisionTime(Time.time);
         if(other.gameObject.TryGetComponent(out CubeMerger cubeMerger))
             TryMergeCube(cubeMerger);
     }
     
     private void SaveLastMergeTime(float time) => _lastMergeTime = time;
+    private void SaveLastCheckCollisionTime(float time) => _lastCheckCollisionTime = time;
 
     private void OnDrawGizmos()
     {
