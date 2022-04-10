@@ -31,6 +31,12 @@ public class Cube : MonoBehaviour
         add => _activated.AddListener(value);
         remove => _activated.RemoveListener(value);
     }
+    [SerializeField] private UnityEvent _spawnedAfterMerge;
+    public event UnityAction SpawnedAfterMerge 
+    {
+        add => _spawnedAfterMerge.AddListener(value);
+        remove => _spawnedAfterMerge.RemoveListener(value);
+    }
 
     private bool _isInitialized = false;
     private bool _isActivated = false;
@@ -53,6 +59,8 @@ public class Cube : MonoBehaviour
         _isActivated = true;
         _activated?.Invoke();
     }
+
+    public void OnSpawnedAfterMerge() => _spawnedAfterMerge.Invoke();
 
     public int GetNumber() => LevelToNumber(_level);
 

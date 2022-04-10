@@ -50,7 +50,7 @@ public class CubeMerger : MonoBehaviour
         CubeSpawner.Instance.DestroyCube(_cube);
         CubeSpawner.Instance.DestroyCube(cubeMerger._cube);
 
-        Cube newCube = CubeSpawner.Instance.SpawnCubeInField(newCubeLevel, newCubePosition, newCubeRotation, isTakeVelocity: true);
+        Cube newCube = CubeSpawner.Instance.SpawnCubeAfterMerge(newCubeLevel, newCubePosition, newCubeRotation, isTakeVelocity: true);
         newCube.GetComponent<CubeMerger>().SaveLastMergeTime(Time.time);
         return true;
     }

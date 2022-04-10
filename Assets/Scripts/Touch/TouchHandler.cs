@@ -47,16 +47,16 @@ public class TouchHandler : MonoBehaviour
         {
             Vector2 currentFrameTouchPosition = Input.GetTouch(0).position;
             if(_isPreviousFrameTouchPressed)
-                _touchHold.Invoke(currentFrameTouchPosition);
+                _touchHold?.Invoke(currentFrameTouchPosition);
             else
-                _touchDown.Invoke(currentFrameTouchPosition);
+                _touchDown?.Invoke(currentFrameTouchPosition);
             _previousFrameTouchPosition = currentFrameTouchPosition;
             _isPreviousFrameTouchPressed = true;
         }
         else 
         {
             if(_isPreviousFrameTouchPressed)
-                _touchUp.Invoke(_previousFrameTouchPosition);
+                _touchUp?.Invoke(_previousFrameTouchPosition);
             _isPreviousFrameTouchPressed = false;
         }
     }
@@ -67,16 +67,16 @@ public class TouchHandler : MonoBehaviour
         {
             Vector2 currentFrameTouchPosition = Input.mousePosition;
             if(_isPreviousFrameTouchPressed)
-                _touchHold.Invoke(currentFrameTouchPosition);
+                _touchHold?.Invoke(currentFrameTouchPosition);
             else
-                _touchDown.Invoke(currentFrameTouchPosition);
+                _touchDown?.Invoke(currentFrameTouchPosition);
             _previousFrameTouchPosition = currentFrameTouchPosition;
             _isPreviousFrameTouchPressed = true;
         }
         else 
         {
             if(_isPreviousFrameTouchPressed)
-                _touchUp.Invoke(_previousFrameTouchPosition);
+                _touchUp?.Invoke(_previousFrameTouchPosition);
             _isPreviousFrameTouchPressed = false;
         }
     }

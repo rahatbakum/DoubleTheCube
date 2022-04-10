@@ -7,7 +7,7 @@ public class PhysicsMovement : MonoBehaviour
     public const float MinTorqueValue = 0f;
     public const float MaxTorqueValue = 4f;
     public const float MinVelocityValue = 0f;
-    public const float MaxVelocityValue = 25f;
+    public const float MaxVelocityValue = 30f;
 
     private Rigidbody _rigidbody;
 

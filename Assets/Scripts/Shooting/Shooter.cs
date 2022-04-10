@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class Shooter : MonoBehaviour
 {
+    private const int MaxCubeLevelOffset = -2;
     private const float GizmosLineHeight = 1.5f;
 
     [SerializeField] private Gun _gun;
@@ -14,7 +15,7 @@ public class Shooter : MonoBehaviour
     public Vector3 RightEdgePosition => transform.position + transform.right * MathHelper.Half(_xRange);
     public Vector3 LeftEdgePosition => transform.position - transform.right * MathHelper.Half(_xRange);
 
-    public int MaxCubeLevel = Cube.StartLevel;
+    private int _maxCubeLevel = Cube.StartLevel;
     private Vector3 _startPosition;
     private float _anchorXPosition = 0f;
     private float _currentXPosition = 0f;
@@ -53,6 +54,18 @@ public class Shooter : MonoBehaviour
         return maxCubeLevel - invertedLevel;
     }
 
+    private void OnCubeSpawned(Cube cube)
+    {
+        int newMaxCubeLevel = cube.Level + MaxCubeLevelOffset;
+        if(_maxCubeLevel >= newMaxCubeLevel)
+            return;
+        if(newMaxCubeLevel < Cube.StartLevel)
+            _maxCubeLevel = Cube.StartLevel;
+        else
+            _maxCubeLevel = newMaxCubeLevel;
+        return;
+    }
+
     private IEnumerator LoadAfterSeconds(float time)
     {
         _isWaitingForLoad = true;
@@ -63,13 +76,25 @@ public class Shooter : MonoBehaviour
 
     private void Load()
     {
-        _gun.Load(CubeLevel(MaxCubeLevel));
+        _gun.Load(CubeLevel(_maxCubeLevel));
     }
 
     private void Awake()
     {
         _startPosition = _gun.transform.position;
         Load();
+    }
+
+    private void OnEnable()
+    {   
+        if(CubeSpawner.Instance != null)
+            CubeSpawner.Instance.CubeSpawned += OnCubeSpawned;
+    }
+
+    private void OnDisable()
+    {   
+        if(CubeSpawner.Instance != null)
+            CubeSpawner.Instance.CubeSpawned -= OnCubeSpawned;
     }
 
     private void MoveGunToXPosition(float xPosition)
