@@ -27,6 +27,19 @@ public class GameManager : MonoBehaviour
         add => _lost.AddListener(value);
         remove => _lost.RemoveListener(value);
     }
+    [SerializeField] private UnityEvent _paused;
+    public event UnityAction Paused
+    {
+        add => _paused.AddListener(value);
+        remove => _paused.RemoveListener(value);
+    }
+    [SerializeField] private UnityEvent _unpaused;
+    public event UnityAction Unpaused
+    {
+        add => _unpaused.AddListener(value);
+        remove => _unpaused.RemoveListener(value);
+    }
+    private float _defaultTimeScale;
     
 
     public void Win()
@@ -45,6 +58,25 @@ public class GameManager : MonoBehaviour
             _currentGameState = GameState.Lost;
             _lost.Invoke();
         }
+    }
+
+    public void Pause()
+    {
+        if(_currentGameState != GameState.Playing)
+            return;
+        _defaultTimeScale = Time.timeScale;
+        Time.timeScale = 0f;
+        _currentGameState = GameState.Paused;
+        _paused.Invoke();
+    }
+
+    public void Unpause()
+    {
+        if(_currentGameState != GameState.Paused)
+            return;
+        Time.timeScale = _defaultTimeScale;
+        _currentGameState = GameState.Playing;
+        _unpaused.Invoke();
     }
 
     public void AddScore(int value)
@@ -72,5 +104,6 @@ public enum GameState
 {
     Playing,
     Won,
-    Lost
+    Lost,
+    Paused
 }

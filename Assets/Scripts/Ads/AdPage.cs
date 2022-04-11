@@ -1,4 +1,5 @@
 using UnityEngine;
+using System;
 using GoogleMobileAds.Api;
 
 public class AdPage : MonoBehaviour
@@ -27,7 +28,19 @@ public class AdPage : MonoBehaviour
     private InterstitialAd CreateIntersitialAd()
     {
         InterstitialAd interstitialAd = new InterstitialAd(PageId);
+        interstitialAd.OnAdOpening += OnAdOpening;
+        interstitialAd.OnAdClosed += OnAdClosed;
         LoadNewAd(ref interstitialAd);
         return interstitialAd;
+    }
+
+    private void OnAdOpening(object sender, EventArgs eventArgs)
+    {
+        GameManager.Instance.Pause();
+    }
+
+    private void OnAdClosed(object sender, EventArgs eventArgs)
+    {
+        GameManager.Instance.Unpause();
     }
 }
