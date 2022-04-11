@@ -9,6 +9,7 @@ public class Shooter : MonoBehaviour
     private const float GizmosLineHeight = 1.5f;
 
     [SerializeField] private Gun _gun;
+    [SerializeField] private CubeSpawner _cubeSpawner;
     [Min(MathHelper.MinNotZeroNumber)]
     [SerializeField] private float _xRange = 4f; 
     [Min(MathHelper.MinNotZeroNumber)]
@@ -98,21 +99,20 @@ public class Shooter : MonoBehaviour
     private void Awake()
     {
         _startPosition = _gun.transform.position;
+        _gun.Initialize(_cubeSpawner);
         Load();
     }
 
     private void OnEnable()
     {   
-        if(CubeSpawner.Instance != null)
-            CubeSpawner.Instance.CubeSpawnedAfterMerge += OnCubeSpawnedAfterMerge;
+        _cubeSpawner.CubeSpawnedAfterMerge += OnCubeSpawnedAfterMerge;
         _gun.Loaded += OnLoaded;
         _gun.Shot += OnShot;
     }
 
     private void OnDisable()
     {   
-        if(CubeSpawner.Instance != null)
-            CubeSpawner.Instance.CubeSpawnedAfterMerge -= OnCubeSpawnedAfterMerge;
+        _cubeSpawner.CubeSpawnedAfterMerge -= OnCubeSpawnedAfterMerge;
         _gun.Loaded -= OnLoaded;
         _gun.Shot -= OnShot;
     }

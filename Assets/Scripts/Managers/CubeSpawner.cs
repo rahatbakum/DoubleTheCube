@@ -23,7 +23,6 @@ public class CubeSpawner : MonoBehaviour
         add => _cubeSpawned.AddListener(value);
         remove => _cubeSpawned.RemoveListener(value);
     }
-    public static CubeSpawner Instance;
     private List<Cube> _spawnedCubes = new List<Cube>();
 
     public Cube SpawnCubeInField(int level, Vector3 position, Quaternion rotation, bool isTakeVelocity = false)
@@ -86,15 +85,8 @@ public class CubeSpawner : MonoBehaviour
     {
         Cube cube = (Instantiate(_cubePrefab, position, rotation) as GameObject).GetComponent<Cube>();
         cube.Initialize(level);
+        cube.GetComponent<CubeMerger>().Initialize(this);
         _cubeSpawned?.Invoke(cube);
         return cube;
-    }
-
-    private void Awake()
-    {
-        if(Instance != null)
-            throw new System.Exception("Here is two CubeSpawner in the scene");
-        else
-            Instance = this;
     }
 }

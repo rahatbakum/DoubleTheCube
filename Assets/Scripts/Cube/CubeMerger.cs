@@ -7,10 +7,17 @@ public class CubeMerger : MonoBehaviour
     private const float CheckCollisionTimeInterval = 0.1f;
 
     [SerializeField] private Cube _cube;
+    private CubeSpawner _cubeSpawner;
     private bool isMerged = false;
     private bool isActive = false;
     private float _lastMergeTime;
     private float _lastCheckCollisionTime;
+
+
+    public void Initialize(CubeSpawner cubeSpawner)
+    {
+        _cubeSpawner = cubeSpawner;
+    }
 
     public void Activate()
     {
@@ -21,6 +28,34 @@ public class CubeMerger : MonoBehaviour
 
     public bool TryMergeCube(CubeMerger cubeMerger)
     {   
+        if(!CheckIsCanMerge(cubeMerger))
+            return false;
+
+        isMerged = true;
+        cubeMerger.isMerged = true;
+
+        Cube newCube = SpawnNewCube(cubeMerger);
+        
+        _cube.OnMerging(newCube);
+        cubeMerger._cube.OnMerging(newCube);
+        
+        _cubeSpawner.DestroyCube(_cube);
+        _cubeSpawner.DestroyCube(cubeMerger._cube);
+
+        newCube.GetComponent<CubeMerger>().SaveLastMergeTime(Time.time);
+        return true;
+    }
+
+    private Cube SpawnNewCube(CubeMerger cubeMerger)
+    {
+        int newCubeLevel = NewCubeLevel(_cube.Level, cubeMerger._cube.Level);
+        Vector3 newCubePosition = NewCubePosition(_cube.transform.position, cubeMerger._cube.transform.position);
+        Quaternion newCubeRotation = NewCubeRotation(_cube.transform.rotation, cubeMerger._cube.transform.rotation);
+        return _cubeSpawner.SpawnCubeAfterMerge(newCubeLevel, newCubePosition, newCubeRotation, isTakeVelocity: true);
+    }
+
+    private bool CheckIsCanMerge(CubeMerger cubeMerger)
+    {
         if(Time.time < _lastMergeTime + MinMergeTimeInterval)
             return false;
         if(Time.time < cubeMerger._lastMergeTime + MinMergeTimeInterval)
@@ -37,29 +72,8 @@ public class CubeMerger : MonoBehaviour
             return false;
         if(!IsSuitableCubes(_cube,cubeMerger._cube))
             return false;
-        if(CubeSpawner.Instance == null)
-            return false;
-
-        isMerged = true;
-        cubeMerger.isMerged = true;
-
-        int newCubeLevel = NewCubeLevel(_cube.Level, cubeMerger._cube.Level);
-        Vector3 newCubePosition = NewCubePosition(_cube.transform.position, cubeMerger._cube.transform.position);
-        Quaternion newCubeRotation = NewCubeRotation(_cube.transform.rotation, cubeMerger._cube.transform.rotation);
-
-        
-
-        Cube newCube = CubeSpawner.Instance.SpawnCubeAfterMerge(newCubeLevel, newCubePosition, newCubeRotation, isTakeVelocity: true);
-        
-        _cube.OnMerging(newCube);
-        CubeSpawner.Instance.DestroyCube(_cube);
-        cubeMerger._cube.OnMerging(newCube);
-        CubeSpawner.Instance.DestroyCube(cubeMerger._cube);
-
-        newCube.GetComponent<CubeMerger>().SaveLastMergeTime(Time.time);
         return true;
     }
-
 
     private static Vector3 NewCubePosition(Vector3 position1, Vector3 position2) => MathHelper.Half(position1 + position2);
     

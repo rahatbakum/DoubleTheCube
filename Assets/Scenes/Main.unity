@@ -1418,6 +1418,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _gun: {fileID: 1078344130}
+  _cubeSpawner: {fileID: 757010066}
   _xRange: 4
   _loadingTime: 0.5
   _loaded:
