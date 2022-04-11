@@ -6,7 +6,6 @@ using UnityEngine.Events;
 public class DeathZone : MonoBehaviour
 {
     [SerializeField] private float _maxCubeStayingTime = 1f;
-    [SerializeField] private int _stayingCubesAmount = 0;
     private List<StayingCube> _stayingCubes = new List<StayingCube>();
 
     private void OnTriggerStay(Collider other)
