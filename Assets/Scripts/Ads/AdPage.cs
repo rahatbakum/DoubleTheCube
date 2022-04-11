@@ -10,6 +10,7 @@ public class AdPage : MonoBehaviour
     {
         if(_interstitialAd.IsLoaded())
             _interstitialAd.Show();
+        _interstitialAd = CreateIntersitialAd();
     }
 
     private void OnEnable()
@@ -17,11 +18,16 @@ public class AdPage : MonoBehaviour
         _interstitialAd = CreateIntersitialAd();
     }
 
+    private void LoadNewAd(ref InterstitialAd interstitialAd)
+    {
+        AdRequest adRequest = new AdRequest.Builder().Build();
+        interstitialAd.LoadAd(adRequest);
+    }
+
     private InterstitialAd CreateIntersitialAd()
     {
         InterstitialAd interstitialAd = new InterstitialAd(PageId);
-        AdRequest adRequest = new AdRequest.Builder().Build();
-        interstitialAd.LoadAd(adRequest);
+        LoadNewAd(ref interstitialAd);
         return interstitialAd;
     }
 }
