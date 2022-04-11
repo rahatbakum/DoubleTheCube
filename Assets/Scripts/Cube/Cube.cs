@@ -18,6 +18,8 @@ public class Cube : MonoBehaviour
                 throw new System.Exception($"{gameObject.name} isn't initialized");
         }
     }
+
+    public int Number => LevelToNumber(Level);
     [SerializeField] private UnityEvent<int> _initialized;
     public event UnityAction<int> Initialized 
     {
@@ -38,8 +40,24 @@ public class Cube : MonoBehaviour
         remove => _spawnedAfterMerge.RemoveListener(value);
     }
 
+    [SerializeField] private UnityEvent<Cube> _merging;
+    public event UnityAction<Cube> Merging
+    {
+        add => _merging.AddListener(value);
+        remove => _merging.RemoveListener(value);
+    }
+
+    [SerializeField] private UnityEvent _destroying;
+    public event UnityAction Destroying
+    {
+        add => _destroying.AddListener(value);
+        remove => _destroying.RemoveListener(value);
+    }
+
     private bool _isInitialized = false;
+    public bool IsInitialized => _isInitialized;
     private bool _isActivated = false;
+    public bool IsActivated => _isActivated;
 
     
 
@@ -49,7 +67,7 @@ public class Cube : MonoBehaviour
             throw new System.Exception($"{gameObject.name} is already initialized");
         _level = level;
         _isInitialized = true;
-        _initialized?.Invoke(GetNumber());
+        _initialized?.Invoke(Number);
     }
 
     public void Activate()
@@ -61,9 +79,12 @@ public class Cube : MonoBehaviour
     }
 
     public void OnSpawnedAfterMerge() => _spawnedAfterMerge.Invoke();
-
-    public int GetNumber() => LevelToNumber(_level);
-
+    public void OnMerging(Cube cube) => _merging.Invoke(cube);
     public static int LevelToNumber(int level) => (int) Mathf.Pow(NumberBase, level);
     public static int NumberToLevel(int number) => (int) Mathf.Log(number, NumberBase);
+
+    private void OnDestroy()
+    {  
+       _destroying.Invoke(); 
+    }
 }

@@ -11,11 +11,15 @@ public class ShooterTouchController : MonoBehaviour
     public void OnTouchDown(Vector2 touchPosition)
     {
         _startTouchPosition = touchPosition;
+        if(GameManager.Instance.CurrentGameState != GameState.Playing)
+            return;
         _shooter.SaveAnchorPosition();
     }
 
     public void OnTouchHold(Vector2 touchPosition)
     {
+        if(GameManager.Instance.CurrentGameState != GameState.Playing)
+            return;
         Vector2 screenRightEdgePosition = _camera.WorldToScreenPoint(_shooter.RightEdgePosition);
         Vector2 screenLeftEdgePosition = _camera.WorldToScreenPoint(_shooter.LeftEdgePosition);
         float screenDistanceBetweenEdges = Vector2.Distance(screenLeftEdgePosition, screenRightEdgePosition);
@@ -25,6 +29,8 @@ public class ShooterTouchController : MonoBehaviour
 
     public void OnTouchUp(Vector2 touchPosition)
     {
+        if(GameManager.Instance.CurrentGameState != GameState.Playing)
+            return;
         _shooter.Shoot();
     }
 }

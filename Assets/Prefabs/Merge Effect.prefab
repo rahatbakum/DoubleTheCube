@@ -46,6 +46,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _particleSystems:
   - {fileID: 4226454547822314774}
+  _mainTransform: {fileID: 6449478589100987993}
   _isPlayOnAwake: 0
 --- !u!1 &8856410613244621661
 GameObject:

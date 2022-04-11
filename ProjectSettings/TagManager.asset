@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Enviroment
   - Cube
+  - UI
+  - Container
   layers:
   - Default
   - TransparentFX

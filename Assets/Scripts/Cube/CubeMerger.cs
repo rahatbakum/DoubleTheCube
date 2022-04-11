@@ -4,7 +4,7 @@ using UnityEngine;
 public class CubeMerger : MonoBehaviour
 {
     private const float MinMergeTimeInterval = 0.1f;
-    private const float CheckCollisionTimeInterval = 0.25f;
+    private const float CheckCollisionTimeInterval = 0.1f;
 
     [SerializeField] private Cube _cube;
     private bool isMerged = false;
@@ -47,10 +47,15 @@ public class CubeMerger : MonoBehaviour
         Vector3 newCubePosition = NewCubePosition(_cube.transform.position, cubeMerger._cube.transform.position);
         Quaternion newCubeRotation = NewCubeRotation(_cube.transform.rotation, cubeMerger._cube.transform.rotation);
 
-        CubeSpawner.Instance.DestroyCube(_cube);
-        CubeSpawner.Instance.DestroyCube(cubeMerger._cube);
+        
 
         Cube newCube = CubeSpawner.Instance.SpawnCubeAfterMerge(newCubeLevel, newCubePosition, newCubeRotation, isTakeVelocity: true);
+        
+        _cube.OnMerging(newCube);
+        CubeSpawner.Instance.DestroyCube(_cube);
+        cubeMerger._cube.OnMerging(newCube);
+        CubeSpawner.Instance.DestroyCube(cubeMerger._cube);
+
         newCube.GetComponent<CubeMerger>().SaveLastMergeTime(Time.time);
         return true;
     }

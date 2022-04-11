@@ -9,7 +9,9 @@ public class Shooter : MonoBehaviour
     private const float GizmosLineHeight = 1.5f;
 
     [SerializeField] private Gun _gun;
+    [Min(MathHelper.MinNotZeroNumber)]
     [SerializeField] private float _xRange = 4f; 
+    [Min(MathHelper.MinNotZeroNumber)]
     [SerializeField] private float _loadingTime = 0.2f;
     public float XRange => _xRange;
     public Vector3 RightEdgePosition => transform.position + transform.right * MathHelper.Half(_xRange);
@@ -34,8 +36,6 @@ public class Shooter : MonoBehaviour
 
     public void SaveAnchorPosition()
     {
-        if(_gun.State != GunState.Loading)
-            return;
         _anchorXPosition = _currentXPosition;
         _isSavedAnchorXPosition = true;
     }
@@ -54,7 +54,7 @@ public class Shooter : MonoBehaviour
         return maxCubeLevel - invertedLevel;
     }
 
-    private void OnCubeSpawned(Cube cube)
+    private void OnCubeSpawnedAfterMerge(Cube cube)
     {
         int newMaxCubeLevel = cube.Level + MaxCubeLevelOffset;
         if(_maxCubeLevel >= newMaxCubeLevel)
@@ -88,13 +88,13 @@ public class Shooter : MonoBehaviour
     private void OnEnable()
     {   
         if(CubeSpawner.Instance != null)
-            CubeSpawner.Instance.CubeSpawned += OnCubeSpawned;
+            CubeSpawner.Instance.CubeSpawnedAfterMerge += OnCubeSpawnedAfterMerge;
     }
 
     private void OnDisable()
     {   
         if(CubeSpawner.Instance != null)
-            CubeSpawner.Instance.CubeSpawned -= OnCubeSpawned;
+            CubeSpawner.Instance.CubeSpawnedAfterMerge -= OnCubeSpawnedAfterMerge;
     }
 
     private void MoveGunToXPosition(float xPosition)

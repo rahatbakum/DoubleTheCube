@@ -3,6 +3,7 @@ using UnityEngine;
 public class OneTimeParticleEffectController : MonoBehaviour
 {
     [SerializeField] private ParticleSystem[] _particleSystems;
+    [SerializeField] private Transform _mainTransform;
     [SerializeField] private bool _isPlayOnAwake = false;
 
     public void Play()
@@ -14,7 +15,7 @@ public class OneTimeParticleEffectController : MonoBehaviour
                 maxParticleSystemDuration = item.main.duration;
             item.Play();
         }
-        Destroy(gameObject, maxParticleSystemDuration);
+        Destroy(_mainTransform.gameObject, maxParticleSystemDuration);
     }
 
     private void Awake()

@@ -11,6 +11,12 @@ public class CubeSpawner : MonoBehaviour
 
     [SerializeField] private GameObject _cubePrefab;
     [SerializeField] private Transform _cubeContainer;
+    [SerializeField] private UnityEvent<Cube> _cubeSpawnedAfterMerge;
+    public event UnityAction<Cube> CubeSpawnedAfterMerge
+    {
+        add => _cubeSpawnedAfterMerge.AddListener(value);
+        remove => _cubeSpawnedAfterMerge.RemoveListener(value);
+    }
     [SerializeField] private UnityEvent<Cube> _cubeSpawned;
     public event UnityAction<Cube> CubeSpawned
     {
@@ -43,6 +49,7 @@ public class CubeSpawner : MonoBehaviour
     public Cube SpawnCubeAfterMerge(int level, Vector3 position, Quaternion rotation, bool isTakeVelocity = false)
     {
         Cube cube = SpawnCubeInField(level, position, rotation, isTakeVelocity);
+        _cubeSpawnedAfterMerge?.Invoke(cube);
         cube.OnSpawnedAfterMerge();
         return cube;
     }
@@ -87,6 +94,7 @@ public class CubeSpawner : MonoBehaviour
     {
         if(Instance != null)
             throw new System.Exception("Here is two CubeSpawner in the scene");
-        Instance = this;
+        else
+            Instance = this;
     }
 }
