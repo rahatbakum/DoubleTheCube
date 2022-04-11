@@ -1,8 +1,22 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Gun : MonoBehaviour
 {
     private const float DefaultVelocityValueFrom0To1 = 1f;
+
+    [SerializeField] private UnityEvent<Cube> _loaded;
+    public event UnityAction<Cube> Loaded
+    {
+        add => _loaded.AddListener(value);
+        remove => _loaded.RemoveListener(value);
+    }
+    [SerializeField] private UnityEvent<Cube> _shot;
+    public event UnityAction<Cube> Shot
+    {
+        add => _shot.AddListener(value);
+        remove => _shot.RemoveListener(value);
+    }
 
     private GunState _state = GunState.NotLoading;
     public GunState State => _state;
@@ -15,6 +29,7 @@ public class Gun : MonoBehaviour
         _state = GunState.Loading;
         _cube = CubeSpawner.Instance.SpawnCubeOutsideField(level, transform.position, transform.rotation);
         _cube.transform.SetParent(transform);
+        _loaded.Invoke(_cube);
     }
 
     public void Shoot()
@@ -24,7 +39,7 @@ public class Gun : MonoBehaviour
         _state = GunState.NotLoading;
         CubeSpawner.Instance.AddCubeToList(_cube);
         _cube.GetComponent<PhysicsMovement>().AddVelocity(transform.forward, DefaultVelocityValueFrom0To1);
-        
+        _shot.Invoke(_cube);
     }
 }
 
