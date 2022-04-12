@@ -7,7 +7,7 @@ using System.Collections.Generic;
 public class CubeSpawner : MonoBehaviour
 {
     private const float MinVelocityValueFrom0To1 = 0.2f;
-    private const float MaxVelocityValueFrom0To1 = 0.4f;
+    private const float MaxVelocityValueFrom0To1 = 0.35f;
 
     [SerializeField] private GameObject _cubePrefab;
     [SerializeField] private Transform _cubeContainer;
